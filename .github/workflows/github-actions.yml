@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - uses: JavidDitty/setup-cintent@1320fb100e7bc4fef0f4039af5e31e5a50def43a
+      - uses: JavidDitty/setup-cintent@1d2af9aa2bfa7c77a76c3c26d0bcca771bcd0c3a
       
       - uses: actions/setup-java@v1
         with:
