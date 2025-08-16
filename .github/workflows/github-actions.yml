@@ -87,17 +87,7 @@ jobs:
                 -Y \
                 -z
                 ) &
-
-                result=$(cat /proc/6320/status | grep -oP "(?<=TracerPid:).*")
-                until [ $result -ne 0 ] || (( SECONDS - start_time >= timeout_time )); do
-                  sleep 1
-                  cat /proc/$run_pid/status | grep -oP "(?<=TracerPid:).*"
-                done
-                if [ $result -eq 0 ]; then
-                  echo "strace failed to start!" 1>&2
-                  exit 1
-                fi
-                
+                cat /proc/6320/status
                 kill -CONT $run_pid
                 wait $run_pid
             else
