@@ -71,7 +71,10 @@ jobs:
                 
                 ( kill -SIGSTOP $BASHPID; exec /bin/bash "$@" ) &
                 pid=$!
+                
                 strace_log=$CINTENT_LOGS/strace.$timestamp
+                start_time=$SECONDS
+                timeout_time=60
                 ( sudo strace \
                   -e decode-fds=path \
                   -e trace=execve,execveat,read,readlink,readlinkat,readv,preadv,preadv2,write,writev,pwritev,pwritev2 \
@@ -82,7 +85,14 @@ jobs:
                   -tt \
                   -Y \
                   -z ) &
-                sleep 20
+                until [ -s "$strace_log" ] || (( SECONDS - start_time >= timeout_time )); do
+                  sleep 1
+                done
+                if [ ! -s "$strace_log" ]; then
+                  echo "strace failed to start!" 1>&2
+                  exit 1
+                fi
+                
                 kill -CONT $pid
                 wait $pid
             else
