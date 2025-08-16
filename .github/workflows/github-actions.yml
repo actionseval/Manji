@@ -73,6 +73,7 @@ jobs:
                 pid=$!
                 
                 strace_log=$CINTENT_LOGS/strace.$timestamp
+                strace_status=/home/runner/strace_status.log
                 start_time=$SECONDS
                 timeout_time=60
                 ( sudo strace \
@@ -84,11 +85,11 @@ jobs:
                   -qqq \
                   -tt \
                   -Y \
-                  -z ) &
-                until [ -s "$strace_log" ] || (( SECONDS - start_time >= timeout_time )); do
+                  -z &> $strace_status) &
+                until [ -s "$strace_status" ] || (( SECONDS - start_time >= timeout_time )); do
                   sleep 1
                 done
-                if [ ! -s "$strace_log" ]; then
+                if [ ! -s "$strace_status" ]; then
                   echo "strace failed to start!" 1>&2
                   exit 1
                 fi
