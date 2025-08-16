@@ -84,7 +84,6 @@ jobs:
                   -tt \
                   -Y \
                   -z &
-                wait $!
                 echo "conting suspended process"
                 kill -CONT $pid
                 wait $pid
