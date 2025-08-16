@@ -86,7 +86,7 @@ jobs:
                   -qqq \
                   -tt \
                   -Y \
-                  -z &> $strace_status) &
+                  -z &> /home/runner/strace_status.log ) &
                 until [ -s "$strace_status" ] || (( SECONDS - start_time >= timeout_time )); do
                   sleep 1
                 done
