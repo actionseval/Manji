@@ -71,6 +71,9 @@ jobs:
                 
                 ( kill -SIGSTOP $BASHPID; exec /bin/bash "$@" ) &
                 pid=$!
+                echo "starting suspended process"
+                wait $pid
+                echo "starting strace"
                 strace_log=$CINTENT_LOGS/strace.$timestamp
                 sudo strace \
                   -e decode-fds=path \
@@ -82,8 +85,11 @@ jobs:
                   -tt \
                   -Y \
                   -z &
+                wait $!
+                echo "conting suspended process"
                 kill -CONT $pid
                 wait $pid
+                echo "suspended process conted"
             else
               /bin/bash "$@"
             fi
