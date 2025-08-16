@@ -72,7 +72,7 @@ jobs:
                 ( kill -SIGSTOP $BASHPID; exec /bin/bash "$@" ) &
                 pid=$!
                 echo "passed sigstop"
-                sleep 10
+                sleep 1
                 echo "passed sleep"
                 strace_log=$CINTENT_LOGS/strace.$timestamp
                 sudo strace \
@@ -85,7 +85,7 @@ jobs:
                   -tt \
                   -Y \
                   -z &
-                sleep 10
+                sleep 1
                 echo "passed strace"
             else
               /bin/bash "$@"
