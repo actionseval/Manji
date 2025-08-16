@@ -71,8 +71,6 @@ jobs:
                 
                 ( kill -SIGSTOP $BASHPID; exec /bin/bash "$@" ) &
                 pid=$!
-                sleep 20
-
                 strace_log=$CINTENT_LOGS/strace.$timestamp
                 ( sudo strace \
                   -e decode-fds=path \
@@ -85,10 +83,7 @@ jobs:
                   -Y \
                   -z ) &
                 sleep 20
-                
                 kill -CONT $pid
-                sleep 20
-                
                 wait $pid
             else
               /bin/bash "$@"
