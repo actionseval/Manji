@@ -87,6 +87,8 @@ jobs:
                   -z &
                 sleep 1
                 echo "passed strace"
+                kill -CONT $pid
+                sleep 5
             else
               /bin/bash "$@"
             fi
