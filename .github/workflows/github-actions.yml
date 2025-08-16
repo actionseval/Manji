@@ -87,9 +87,9 @@ jobs:
                 -Y \
                 -z
                 ) &
-                cat /proc/$run_pid/status
+                cat /proc/$run_pid/status | grep -oP "(?<=TracerPid:).*"
                 sleep 1
-                cat /proc/$run_pid/status
+                cat /proc/$run_pid/status | grep -oP "(?<=TracerPid:).*"
                 kill -CONT $run_pid
                 wait $run_pid
             else
