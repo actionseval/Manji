@@ -83,6 +83,7 @@ jobs:
                   -Y \
                   -z &
                 kill -CONT $pid
+                wait $pid
             else
               /bin/bash "$@"
             fi
