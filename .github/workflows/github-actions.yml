@@ -70,7 +70,7 @@ jobs:
                 fi
                 
                 ( kill -SIGSTOP $BASHPID; exec /bin/bash "$@" ) &
-                pid=$!
+                run_pid=$!
                 
                 strace_log=$CINTENT_LOGS/strace.$timestamp
                 start_time=$SECONDS
@@ -81,17 +81,25 @@ jobs:
                 -e trace=execve,execveat,read,readlink,readlinkat,readv,preadv,preadv2,write,writev,pwritev,pwritev2 \
                 -ff \
                 -o $strace_log \
-                -p $pid \
+                -p $run_pid \
                 -qqq \
                 -tt \
                 -Y \
                 -z
                 ) &
+
+                result=$(cat /proc/6320/status | grep -oP "(?<=TracerPid:).*")
+                until [ $result -ne 0 ] || (( SECONDS - start_time >= timeout_time )); do
+                  sleep 1
+                  cat /proc/$run_pid/status | grep -oP "(?<=TracerPid:).*"
+                done
+                if [ $result -eq 0 ]; then
+                  echo "strace failed to start!" 1>&2
+                  exit 1
+                fi
                 
-                sleep 10
-                
-                kill -CONT $pid
-                wait $pid
+                kill -CONT $run_pid
+                wait $run_pid
             else
               /bin/bash "$@"
             fi
