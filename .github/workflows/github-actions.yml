@@ -72,7 +72,6 @@ jobs:
                 ( kill -SIGSTOP $BASHPID; exec /bin/bash "$@" ) &
                 pid=$!
                 echo "starting suspended process"
-                wait $pid
                 echo "starting strace"
                 strace_log=$CINTENT_LOGS/strace.$timestamp
                 sudo strace \
