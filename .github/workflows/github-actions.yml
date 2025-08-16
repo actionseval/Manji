@@ -73,27 +73,22 @@ jobs:
                 pid=$!
                 
                 strace_log=$CINTENT_LOGS/strace.$timestamp
-                strace_status=/home/runner/strace_status.log
-                rm -f $strace_status
                 start_time=$SECONDS
                 timeout_time=60
-                ( sudo strace \
-                  -e decode-fds=path \
-                  -e trace=execve,execveat,read,readlink,readlinkat,readv,preadv,preadv2,write,writev,pwritev,pwritev2 \
-                  -ff \
-                  -o $strace_log \
-                  -p $pid \
-                  -qqq \
-                  -tt \
-                  -Y \
-                  -z &> /home/runner/strace_status.log ) &
-                until [ -s "$strace_status" ] || (( SECONDS - start_time >= timeout_time )); do
-                  sleep 1
-                done
-                if [ ! -s "$strace_status" ]; then
-                  echo "strace failed to start!" 1>&2
-                  exit 1
-                fi
+                ( 
+                sudo strace \
+                -e decode-fds=path \
+                -e trace=execve,execveat,read,readlink,readlinkat,readv,preadv,preadv2,write,writev,pwritev,pwritev2 \
+                -ff \
+                -o $strace_log \
+                -p $pid \
+                -qqq \
+                -tt \
+                -Y \
+                -z
+                ) &
+                
+                sleep 10
                 
                 kill -CONT $pid
                 wait $pid
