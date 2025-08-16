@@ -74,6 +74,7 @@ jobs:
                 
                 strace_log=$CINTENT_LOGS/strace.$timestamp
                 strace_status=/home/runner/strace_status.log
+                rm -f $strace_status
                 start_time=$SECONDS
                 timeout_time=60
                 ( sudo strace \
